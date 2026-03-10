@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Moonshine Shuffle — Character Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=Special+Elite&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  @page { size: letter; margin: 0.38in 0.42in; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #111;
+    --dark: #444;
+    --mid: #666;
+    --light: #bbb;
+    --rule: #999;
+    --bg: #fafafa;
+    --bg2: #f2f2f2;
+    --paper: #fff;
+  }
+
+  body {
+    background: #aaa;
+    font-family: 'Special Elite', cursive;
+    font-size: 12px;
+    color: var(--black);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 7.7in;
+    height: 10.2in;
+    background: var(--paper);
+    margin: 0.15in auto;
+    padding: 0.38in 0.4in 0.3in;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.35);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 7px;
+    border: 1.5px solid var(--black);
+    pointer-events: none;
+    z-index: 100;
+  }
+  .page::after {
+    content: '';
+    position: absolute;
+    inset: 13px;
+    border: 0.5px solid #777;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  .corner { position: absolute; z-index: 101; width: 14px; height: 14px; }
+  .corner::before, .corner::after { content: ''; position: absolute; background: var(--black); }
+  .corner::before { width: 14px; height: 1.5px; top: 0; left: 0; }
+  .corner::after  { width: 1.5px; height: 14px; top: 0; left: 0; }
+  .corner-tl { top: 4px; left: 4px; }
+  .corner-tr { top: 4px; right: 4px; transform: scaleX(-1); }
+  .corner-bl { bottom: 4px; left: 4px; transform: scaleY(-1); }
+  .corner-br { bottom: 4px; right: 4px; transform: scale(-1); }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    padding: 4px 30px 4px;
+    border-bottom: 2px solid var(--black);
+    margin-bottom: 5px;
+    flex-shrink: 0;
+  }
+  .game-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 26px;
+    letter-spacing: 3px;
+    line-height: 1;
+  }
+  .title-ornament {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 2px 0;
+  }
+  .title-ornament .line { flex: 1; height: 1px; background: var(--black); }
+  .title-ornament .label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--dark);
+  }
+
+  /* IDENTITY — two rows */
+  .identity {
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--rule);
+    flex-shrink: 0;
+  }
+  .id-row { display: flex; gap: 6px; align-items: flex-end; margin-bottom: 4px; }
+  .id-row:last-child { margin-bottom: 0; }
+
+  /* FIELDS */
+  .field { display: flex; flex-direction: column; flex: 1; }
+  .field.w2 { flex: 2; }
+  .field.w3 { flex: 3; }
+  .field.fix90 { flex: 0 0 90px; }
+  .field.fix75 { flex: 0 0 75px; }
+  .field.fix65 { flex: 0 0 65px; }
+
+  .field label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--mid);
+    text-transform: uppercase;
+    margin-bottom: 1px;
+  }
+  .field input[type="text"],
+  .field textarea {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--rule);
+    font-family: 'Special Elite', cursive;
+    font-size: 12px;
+    color: var(--black);
+    padding: 1px 1px;
+    outline: none;
+    width: 100%;
+    line-height: 1.3;
+  }
+  .field textarea {
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    padding: 3px 4px;
+    resize: none;
+  }
+  .field input:focus { border-color: var(--black); }
+  .field textarea:focus { border-color: var(--black); }
+
+  /* LAYOUT */
+  .body-flex {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 6px;
+    flex-shrink: 0;
+    align-items: stretch;
+  }
+  .col { display: flex; flex-direction: column; gap: 5px; }
+  .col .grow { flex: 1; }
+  .row { display: flex; gap: 6px; align-items: flex-end; margin-bottom: 5px; }
+  .row:last-child { margin-bottom: 0; }
+
+  /* SECTION */
+  .section-box {
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    padding: 5px 6px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 9.5px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--dark);
+    border-bottom: 1px solid var(--black);
+    margin-bottom: 5px;
+    padding-bottom: 2px;
+  }
+
+  /* DOTS */
+  .asset-row { display: flex; align-items: center; gap: 5px; margin-bottom: 4px; }
+  .asset-row:last-child { margin-bottom: 0; }
+  .asset-name {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    flex: 0 0 58px;
+  }
+  .dots { display: flex; gap: 4px; }
+  .dot {
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    border: 1px solid var(--dark);
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .dot.filled { background: var(--dark); border-color: var(--dark); }
+
+  .ally-row { display: flex; align-items: center; gap: 5px; margin-bottom: 3px; }
+  .ally-row:last-child { margin-bottom: 0; }
+  .ally-row input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--rule);
+    font-family: 'Special Elite', cursive;
+    font-size: 12px;
+    color: var(--black);
+    outline: none;
+    padding: 1px 2px;
+  }
+
+  /* VIRTUE / VICE */
+  .vv-row { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+  .vv-box { padding: 4px 5px; border: 1px solid var(--rule); }
+  .vv-box.virtue { border-left: 3px solid var(--dark); }
+  .vv-box.vice   { border-left: 3px solid var(--black); background: var(--bg2); }
+  .vv-box label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--mid);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .vv-box input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--rule);
+    font-family: 'Special Elite', cursive;
+    font-size: 12px;
+    color: var(--black);
+    outline: none;
+    width: 100%;
+    padding: 1px 0;
+  }
+
+  /* PERKS */
+  .perk-row { margin-bottom: 4px; }
+  .perk-row:last-child { margin-bottom: 0; }
+  .perk-row input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--rule);
+    font-family: 'Special Elite', cursive;
+    font-size: 12px;
+    color: var(--black);
+    outline: none;
+    width: 100%;
+    padding: 1px 1px;
+  }
+  .perk-row input:focus { border-color: var(--black); }
+
+  /* GOALS */
+  .goal-label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mid);
+    display: inline-block;
+    margin-bottom: 2px;
+  }
+  .goal-label.minor { color: var(--mid); }
+
+  /* CONNECTIONS */
+  .conn-entry {
+    display: flex;
+    gap: 6px;
+    align-items: flex-end;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted var(--light);
+  }
+  .conn-entry:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  /* CONDITIONS — just lines, no boxes */
+  .cond-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cond-group h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    color: var(--dark);
+  }
+  .cond-line {
+    border: none;
+    border-bottom: 1px solid var(--rule);
+    font-family: 'Special Elite', cursive;
+    font-size: 12px;
+    color: var(--black);
+    outline: none;
+    width: 100%;
+    background: transparent;
+    padding: 1px 2px;
+    margin-bottom: 3px;
+    display: block;
+  }
+  .cond-line:last-child { margin-bottom: 0; }
+  .cond-line:focus { border-color: var(--black); }
+
+  /* MOXIE */
+  .moxie-track {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 5px;
+  }
+  .moxie-pip {
+    width: 16px; height: 16px;
+    border: 1px solid var(--dark);
+    transform: rotate(45deg);
+    background: white;
+    flex-shrink: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    cursor: pointer;
+  }
+  .moxie-pip.filled { background: var(--black); }
+
+  /* NOTES — fills remaining space */
+  .notes-section {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .notes-section .section-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .notes-section .section-box .field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .notes-section textarea {
+    flex: 1;
+    min-height: 0;
+    resize: none;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    font-family: 'Special Elite', cursive;
+    font-size: 10px;
+    padding: 4px;
+    outline: none;
+    width: 100%;
+    color: var(--black);
+  }
+  .notes-section textarea:focus { border-color: var(--black); }
+
+  .print-btn {
+    display: block;
+    margin: 6px auto 0;
+    padding: 4px 22px;
+    background: var(--black);
+    color: var(--paper);
+    border: none;
+    font-family: 'Cinzel', serif;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  @media print {
+    body { background: white; }
+    .page { margin: 0; box-shadow: none; width: 100%; height: 100vh; }
+    .print-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <div class="header">
+    <div class="game-title">The Moonshine Shuffle</div>
+    <div class="title-ornament">
+      <div class="line"></div>
+      <div class="label">Character Sheet</div>
+      <div class="line"></div>
+    </div>
+  </div>
+
+  <div class="identity">
+    <div class="id-row">
+      <div class="field w3"><label>Name</label><input type="text" name="char_name"></div>
+      <div class="field w2"><label>Concept</label><input type="text" name="concept"></div>
+      <div class="field fix65"><label>Age</label><input type="text" name="age"></div>
+      <div class="field fix90"><label>Player</label><input type="text" name="player"></div>
+    </div>
+    <div class="id-row">
+      <div class="field w3"><label>Appearance</label><input type="text" name="appearance"></div>
+      <div class="field fix90"><label>Pronouns</label><input type="text" name="pronouns"></div>
+    </div>
+  </div>
+
+  <div class="body-flex">
+    <div class="main-grid">
+
+      <div class="col">
+
+        <div class="section-box">
+          <div class="section-title">Classes</div>
+          <div class="row">
+            <div class="field fix90"><label>Primary Class</label><input type="text" name="class_1"></div>
+            <div class="field"><label>Archetype</label><input type="text" name="arch_1"></div>
+          </div>
+          <div class="row">
+            <div class="field fix90"><label>Secondary Class</label><input type="text" name="class_2"></div>
+            <div class="field"><label>Notes</label><input type="text" name="class_notes"></div>
+          </div>
+        </div>
+
+        <div class="section-box">
+          <div class="section-title">Virtue &amp; Vice</div>
+          <div class="vv-row">
+            <div class="vv-box virtue"><label>Virtue</label><input type="text" name="virtue"></div>
+            <div class="vv-box vice"><label>Vice</label><input type="text" name="vice"></div>
+          </div>
+        </div>
+
+        <div class="section-box">
+          <div class="section-title">Assets</div>
+          <div class="asset-row">
+            <div class="asset-name">Wealth</div>
+            <div class="dots" data-max="5" data-name="asset_wealth"></div>
+          </div>
+          <div class="asset-row">
+            <div class="asset-name">Fame</div>
+            <div class="dots" data-max="5" data-name="asset_fame"></div>
+          </div>
+          <div class="asset-row">
+            <div class="asset-name">Network</div>
+            <div class="dots" data-max="5" data-name="asset_network"></div>
+          </div>
+          <div style="border-top:1px dotted var(--light); margin:5px 0 4px;"></div>
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dark);margin-bottom:4px;">Allies</div>
+          <div class="ally-row">
+            <div class="dots" data-max="5" data-name="ally_1_dots"></div>
+            <input type="text" name="ally_1_name" style="flex:2">
+          </div>
+          <div class="ally-row">
+            <div class="dots" data-max="5" data-name="ally_2_dots"></div>
+            <input type="text" name="ally_2_name" style="flex:2">
+          </div>
+          <div class="ally-row">
+            <div class="dots" data-max="5" data-name="ally_3_dots"></div>
+            <input type="text" name="ally_3_name" style="flex:2">
+          </div>
+        </div>
+
+        <div class="section-box grow">
+          <div class="section-title">Connections</div>
+          <div class="conn-entry">
+            <div class="field"><label>Name</label><input type="text" name="conn_1_name"></div>
+            <div class="field"><label>Notes</label><input type="text" name="conn_1_note"></div>
+          </div>
+          <div class="conn-entry">
+            <div class="field"><label>Name</label><input type="text" name="conn_2_name"></div>
+            <div class="field"><label>Notes</label><input type="text" name="conn_2_note"></div>
+          </div>
+          <div class="conn-entry">
+            <div class="field"><label>Name</label><input type="text" name="conn_3_name"></div>
+            <div class="field"><label>Notes</label><input type="text" name="conn_3_note"></div>
+          </div>
+          <div class="conn-entry">
+            <div class="field"><label>Name</label><input type="text" name="conn_4_name"></div>
+            <div class="field"><label>Notes</label><input type="text" name="conn_4_note"></div>
+          </div>
+        </div>
+
+        <div class="section-box" style="text-align:center;">
+          <div class="section-title">Moxie</div>
+          <div class="moxie-track">
+            <div class="moxie-pip"></div>
+            <div class="moxie-pip"></div>
+            <div class="moxie-pip"></div>
+            <div class="moxie-pip"></div>
+            <div class="moxie-pip"></div>
+            <div class="moxie-pip"></div>
+            <div class="moxie-pip"></div>
+          </div>
+        </div>
+
+      </div><div class="col">
+
+        <div class="section-box">
+          <div class="section-title">Perks</div>
+          <div class="perk-row"><input type="text" name="perk_1"></div>
+          <div class="perk-row"><input type="text" name="perk_2"></div>
+          <div class="perk-row"><input type="text" name="perk_3"></div>
+          <div class="perk-row"><input type="text" name="perk_4"></div>
+          <div class="perk-row"><input type="text" name="perk_5"></div>
+        </div>
+
+        <div class="section-box">
+          <div class="section-title">Goals</div>
+          <div style="margin-bottom:5px;">
+            <div class="goal-label">Major</div>
+            <div class="field"><textarea name="goal_major"></textarea></div>
+          </div>
+          <div style="margin-bottom:5px;">
+            <div class="goal-label minor">Minor</div>
+            <div class="field"><textarea name="goal_minor_1"></textarea></div>
+          </div>
+          <div>
+            <div class="goal-label minor">Minor</div>
+            <div class="field"><textarea name="goal_minor_2"></textarea></div>
+          </div>
+        </div>
+
+        <div class="section-box">
+          <div class="section-title">Favors</div>
+          <div class="perk-row"><input type="text" name="favor_1"></div>
+          <div class="perk-row"><input type="text" name="favor_2"></div>
+          <div class="perk-row"><input type="text" name="favor_3"></div>
+          <div class="perk-row"><input type="text" name="favor_4"></div>
+          <div class="perk-row"><input type="text" name="favor_5"></div>
+          <div class="perk-row"><input type="text" name="favor_6"></div>
+        </div>
+
+        <div class="section-box grow">
+          <div class="section-title">Conditions</div>
+          <div class="cond-grid">
+            <div class="cond-group">
+              <h4>Physical</h4>
+              <input class="cond-line" type="text" name="cond_p1">
+              <input class="cond-line" type="text" name="cond_p2">
+              <input class="cond-line" type="text" name="cond_p3">
+              <input class="cond-line" type="text" name="cond_p4">
+              <input class="cond-line" type="text" name="cond_p5">
+            </div>
+            <div class="cond-group">
+              <h4>Mental / Emotional</h4>
+              <input class="cond-line" type="text" name="cond_m1">
+              <input class="cond-line" type="text" name="cond_m2">
+              <input class="cond-line" type="text" name="cond_m3">
+              <input class="cond-line" type="text" name="cond_m4">
+              <input class="cond-line" type="text" name="cond_m5">
+            </div>
+          </div>
+        </div>
+
+      </div></div><div class="notes-section">
+      <div class="section-box">
+        <div class="section-title">Notes</div>
+        <div class="field">
+          <textarea name="general_notes"></textarea>
+        </div>
+      </div>
+    </div>
+
+  </div><button class="print-btn" onclick="
+    const player = document.querySelector('.id-row .field.fix90 input').value.trim();
+    document.title = player ? 'Moonshine Shuffle - ' + player : 'Moonshine Shuffle - Character Sheet';
+    window.print();
+  ">Print / Save as PDF</button>
+</div>
+
+<script>
+// --- YOUR ORIGINAL DOT LOGIC (WITH PERSISTENCE ADDED) ---
+function buildDots(container) {
+  const max = parseInt(container.dataset.max) || 5;
+  const saveKey = container.dataset.name || container.previousElementSibling?.innerText;
+  
+  // Load saved dots
+  let current = parseInt(localStorage.getItem(saveKey)) || 0;
+  
+  function updateDots() {
+    container.querySelectorAll('.dot').forEach((d, idx) => {
+      d.classList.toggle('filled', idx < current);
+    });
+  }
+
+  for (let i = 1; i <= max; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    dot.addEventListener('click', () => {
+      current = (current === i) ? 0 : i;
+      localStorage.setItem(saveKey, current);
+      updateDots();
+    });
+    container.appendChild(dot);
+  }
+  updateDots();
+}
+
+// --- YOUR ORIGINAL MOXIE LOGIC (WITH PERSISTENCE ADDED) ---
+const pips = document.querySelectorAll('.moxie-pip');
+let moxieScore = parseInt(localStorage.getItem('moxie_save')) || 0;
+
+function updateMoxie() {
+  pips.forEach((p, idx) => {
+    p.classList.toggle('filled', idx < moxieScore);
+  });
+}
+
+pips.forEach((pip, idx) => {
+  pip.addEventListener('click', () => {
+    const val = idx + 1;
+    moxieScore = (moxieScore === val) ? 0 : val;
+    localStorage.setItem('moxie_save', moxieScore);
+    updateMoxie();
+  });
+});
+
+// --- TEXT AUTO-SAVE LOGIC ---
+const allFields = document.querySelectorAll('input[type="text"], textarea');
+allFields.forEach(field => {
+  // Load
+  const saved = localStorage.getItem('save_' + field.name);
+  if (saved) field.value = saved;
+  
+  // Save as they type
+  field.addEventListener('input', () => {
+    localStorage.setItem('save_' + field.name, field.value);
+  });
+});
+
+document.querySelectorAll('.dots').forEach(buildDots);
+updateMoxie();
+</script>
+</body>
+</html>
